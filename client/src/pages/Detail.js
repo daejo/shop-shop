@@ -3,7 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from '@apollo/react-hooks';
 
 import { useStoreContext } from "../utils/GlobalState";
-import { UPDATE_PRODUCTS } from "../utils/actions";
+import {
+  REMOVE_FROM_CART,
+  UPDATE_CART_QUANTITY,
+  ADD_TO_CART,
+  UPDATE_PRODUCTS,
+} from '../utils/actions';
 import { QUERY_PRODUCTS } from "../utils/queries";
 import spinner from '../assets/spinner.gif'
 import Cart from '../components/Cart';
@@ -18,6 +23,13 @@ function Detail() {
 
   const { products } = state;
 
+  const addToCart = () => {
+    dispatch({
+      type: ADD_TO_CART,
+      product: { ...currentProduct, purchaseQuantity: 1 }
+    });
+  };
+
   useEffect(() => {
     if (products.length) {
       setCurrentProduct(products.find(product => product._id === id));
@@ -28,6 +40,8 @@ function Detail() {
       });
     }
   }, [products, data, dispatch, id]);
+
+  console.log(state)
 
   return (
     <>
@@ -47,9 +61,7 @@ function Detail() {
             <strong>Price:</strong>
             ${currentProduct.price}
             {" "}
-            <button>
-              Add to Cart
-            </button>
+            <button onClick={addToCart}>Add to cart</button>
             <button>
               Remove from Cart
             </button>
